@@ -9,7 +9,7 @@
             }
         },
         "virtualMachineSize": {
-            "defaultValue": "Standard_E2s_v3",
+            "defaultValue": "Standard_F8s",
             "type": "String",
             "metadata": {
                 "description": "VM size"
@@ -21,11 +21,8 @@
                 "description": "User name for the Virtual Machine."
             }
         },
-        "sshKeyData": {
-            "type": "String",
-            "metadata": {
-                "description": "Provide an RSA public key in single-line string format (starting with 'ssh-rsa') or the multi-line PEM format. NOTE: You can generate SSH keys using ssh-keygen on Linux and OS X, or PuTTYGen on Windows. Learn more on: https://docs.microsoft.com/en-us/azure/virtual-machines/linux/ssh-from-windows"
-            }
+        "adminPassword": {
+            "type": "securestring"
         },
         "customData": {
             "type": "String",
@@ -254,23 +251,13 @@
             "apiVersion": "[providers('Microsoft.Compute','virtualMachines').apiVersions[0]]",
             "location": "[resourceGroup().location]",
             "tags": {
-                "displayName": "Controller VM"
+                "displayName": "Sensor VM"
             },
             "properties": {
                 "osProfile": {
                     "computerName": "[parameters('virtualMachineName')]",
                     "adminUsername": "[parameters('adminUsername')]",
-                    "linuxConfiguration": {
-                        "disablePasswordAuthentication": true,
-                        "ssh": {
-                            "publicKeys": [
-                                {
-                                    "path": "[variables('sshKeyPath')]",
-                                    "keyData": "[parameters('sshKeyData')]"
-                                }
-                            ]
-                        }
-                    },
+                    "adminPassword": "[parameters('adminPassword')]",
                     "customData": "[base64(parameters('customData'))]"
                 },
                 "hardwareProfile": {
@@ -279,8 +266,8 @@
                 "storageProfile": {
                     "imageReference": {
                         "publisher": "mfe_azure",
-                        "offer": "mcafee_vnsp_controller_for_azure",
-                        "sku": "mcafee-vnsp-controller",
+                        "offer": "mcafee_vnsp_for_azure",
+                        "sku": "mcafee-vnsp-azure-ips-sensor-byol",
                         "version": "latest"
                     },
                     "osDisk": {
@@ -303,9 +290,9 @@
                 "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
             ],
 			"plan": {
-                "name": "mcafee-vnsp-controller",
+                "name": "mcafee-vnsp-azure-ips-sensor-byol",
                 "publisher": "mfe_azure",
-                "product": "mcafee_vnsp_controller_for_azure"
+                "product": "mcafee_vnsp_for_azure"
             }
         }
     ],
