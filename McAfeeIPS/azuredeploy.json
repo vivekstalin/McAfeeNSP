@@ -3,6 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "virtualMachineName": {
+			"defaultValue": "mcafee-ips",
             "type": "String",
             "metadata": {
                 "description": "VM Name"
@@ -16,6 +17,7 @@
             }
         },
         "adminUsername": {
+			"defaultValue": "vnsp",
             "type": "String",
             "metadata": {
                 "description": "User name for the Virtual Machine."
